@@ -1,0 +1,13 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/ZillaSlab/ZillaSlab-Bold.ttf",
+      "sha1": "a09a0c7bf703ae70b5a6caac6b232ae31f9d0b1f"
+    },
+    {
+      "path": "assets/fonts/ZillaSlab/ZillaSlab-Regular.ttf",
+      "sha1": "d4d5b3b9cdb0cd88c2fc9f1777ab73163bbc18f4"
+    }
+  ]
+}
