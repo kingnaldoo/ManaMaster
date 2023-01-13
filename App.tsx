@@ -2,7 +2,9 @@ import "react-native-gesture-handler";
 import React, { useEffect } from "react";
 import { Platform, StatusBar } from "react-native";
 import SplashScreen from "react-native-splash-screen";
+import { ThemeProvider } from "styled-components";
 import { Routes } from "./src/routes";
+import { theme } from "./src/global/styles/theme";
 
 export default function App() {
   useEffect(() => {
@@ -10,11 +12,15 @@ export default function App() {
 
     if (Platform.OS === "android") {
       StatusBar.setBackgroundColor("transparent");
-      StatusBar.setTranslucent(false);
+      StatusBar.setTranslucent(true);
     }
 
     SplashScreen.hide();
   }, []);
 
-  return <Routes />;
+  return (
+    <ThemeProvider theme={theme}>
+      <Routes />
+    </ThemeProvider>
+  );
 }
