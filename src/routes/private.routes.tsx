@@ -1,5 +1,8 @@
 import React from "react";
-import { createStackNavigator } from "@react-navigation/stack";
+import {
+  TransitionPresets,
+  createStackNavigator,
+} from "@react-navigation/stack";
 import { Platform, StatusBar } from "react-native";
 import { ms } from "react-native-size-matters";
 import { CardDetails, Home, MyDeck } from "../screens";
@@ -36,6 +39,7 @@ export function PrivateRoutes() {
           fontFamily: theme.fonts.title700,
           fontSize: ms(20),
         },
+        ...TransitionPresets.SlideFromRightIOS,
       }}
     >
       <Stack.Screen
@@ -43,7 +47,7 @@ export function PrivateRoutes() {
         component={Home}
         options={{
           title: "Decks",
-          headerRight: () => <LogoutButton />,
+          headerRight: LogoutButton,
         }}
       />
       <Stack.Screen
