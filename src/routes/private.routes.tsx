@@ -28,9 +28,9 @@ function ReturnButton() {
   );
 }
 
-export function PrivateRoutes() {
-  const Stack = createStackNavigator();
+const Stack = createStackNavigator();
 
+export function PrivateRoutes() {
   if (Platform.OS === "android") {
     StatusBar.setBackgroundColor("#030D17");
     StatusBar.setTranslucent(false);
