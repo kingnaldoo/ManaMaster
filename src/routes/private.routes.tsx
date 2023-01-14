@@ -71,7 +71,13 @@ export function PrivateRoutes() {
           component={MyDeck}
           options={{ title: "Meu Deck" }}
         />
-        <Stack.Screen name="CardDetails" component={CardDetails} />
+        <Stack.Screen
+          name="CardDetails"
+          component={CardDetails}
+          options={{
+            headerTransparent: true,
+          }}
+        />
       </Stack.Group>
     </Stack.Navigator>
   );
