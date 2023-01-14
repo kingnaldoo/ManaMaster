@@ -5,14 +5,25 @@ import {
 } from "@react-navigation/stack";
 import { Platform, StatusBar } from "react-native";
 import { ms } from "react-native-size-matters";
+import { useNavigation } from "@react-navigation/native";
 import { CardDetails, Home, MyDeck } from "../screens";
 import { theme } from "../global/styles/theme";
-import { Button, TextButton } from "./styles";
+import { Button, IconReturn, TextButton } from "./styles";
 
 function LogoutButton() {
   return (
     <Button>
       <TextButton>Sair</TextButton>
+    </Button>
+  );
+}
+
+function ReturnButton() {
+  const { goBack } = useNavigation();
+
+  return (
+    <Button onPress={() => goBack()}>
+      <IconReturn />
     </Button>
   );
 }
@@ -50,12 +61,18 @@ export function PrivateRoutes() {
           headerRight: LogoutButton,
         }}
       />
-      <Stack.Screen
-        name="MyDeck"
-        component={MyDeck}
-        options={{ title: "Meu Deck" }}
-      />
-      <Stack.Screen name="CardDetails" component={CardDetails} />
+      <Stack.Group
+        screenOptions={{
+          headerLeft: ReturnButton,
+        }}
+      >
+        <Stack.Screen
+          name="MyDeck"
+          component={MyDeck}
+          options={{ title: "Meu Deck" }}
+        />
+        <Stack.Screen name="CardDetails" component={CardDetails} />
+      </Stack.Group>
     </Stack.Navigator>
   );
 }
