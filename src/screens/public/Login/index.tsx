@@ -13,8 +13,11 @@ import {
   TextWrapper,
   Title,
 } from "./styles";
+import { useAuth } from "../../../hooks/useAuth";
 
 export function Login() {
+  const { setUser } = useAuth();
+
   return (
     <ContainerLogin>
       <BackgroundLogin />
@@ -28,7 +31,7 @@ export function Login() {
         </Subtitle>
 
         <Footer>
-          <OauthButton>
+          <OauthButton onPress={() => setUser("fruberv")}>
             <IconWrapper>
               <GoogleIcon />
             </IconWrapper>

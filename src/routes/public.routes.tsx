@@ -2,9 +2,9 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Login } from "../screens";
 
-export function PublicRoutes() {
-  const Stack = createStackNavigator();
+const Stack = createStackNavigator();
 
+export function PublicRoutes() {
   return (
     <Stack.Navigator>
       <Stack.Screen

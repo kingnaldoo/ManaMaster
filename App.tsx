@@ -5,6 +5,7 @@ import SplashScreen from "react-native-splash-screen";
 import { ThemeProvider } from "styled-components";
 import { Routes } from "./src/routes";
 import { theme } from "./src/global/styles/theme";
+import { ReduxProvider } from "./src/redux";
 
 export default function App() {
   useEffect(() => {
@@ -19,8 +20,10 @@ export default function App() {
   }, []);
 
   return (
-    <ThemeProvider theme={theme}>
-      <Routes />
-    </ThemeProvider>
+    <ReduxProvider>
+      <ThemeProvider theme={theme}>
+        <Routes />
+      </ThemeProvider>
+    </ReduxProvider>
   );
 }
