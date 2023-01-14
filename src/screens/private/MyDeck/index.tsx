@@ -28,12 +28,14 @@ import {
   WrapperSearchCard,
   WrapperTitle,
 } from "./styles";
+import { ModalColor } from "./components/Modal/ModalColor";
 
 export function MyDeck() {
   const { navigate } = useNavigation();
   const [isEditableTitle, setIsEditableTitle] = React.useState(false);
   const [title, setTitle] = React.useState("Meu deck");
   const [loading, setLoading] = React.useState(false);
+  const [modalVisible, setModalVisible] = React.useState(false);
 
   const data = [
     {
@@ -73,99 +75,109 @@ export function MyDeck() {
   ];
 
   return (
-    <ContainerMyDeck>
-      <Content nestedScrollEnabled>
-        <CustomDeckSection>
-          <WrapperTitle>
-            {isEditableTitle ? (
-              <InputTitle
-                value={title}
-                onChangeText={(value) => setTitle(value)}
-                autoFocus
-                onBlur={() => setIsEditableTitle(false)}
-              />
-            ) : (
-              <WrapperInput onPress={() => setIsEditableTitle(true)}>
-                <Title>{title}</Title>
-                <IconEdit />
-              </WrapperInput>
-            )}
+    <>
+      <ContainerMyDeck>
+        <Content nestedScrollEnabled>
+          <CustomDeckSection>
+            <WrapperTitle>
+              {isEditableTitle ? (
+                <InputTitle
+                  value={title}
+                  onChangeText={(value) => setTitle(value)}
+                  autoFocus
+                  onBlur={() => setIsEditableTitle(false)}
+                />
+              ) : (
+                <WrapperInput onPress={() => setIsEditableTitle(true)}>
+                  <Title>{title}</Title>
+                  <IconEdit />
+                </WrapperInput>
+              )}
 
-            <InputColor />
-          </WrapperTitle>
+              <InputColor onPress={() => setModalVisible(true)} />
+            </WrapperTitle>
 
-          <WrapperDeck>
-            <ScrollView horizontal scrollEnabled={false}>
-              <FlatList
-                data={data}
-                keyExtractor={(item) => item.id}
-                numColumns={3}
-                renderItem={({ item }) => {
-                  return item.image ? (
-                    <ButtonCard
-                      onPress={() => navigate("CardDetails" as never)}
-                    >
-                      <ImageCard
-                        source={{
-                          uri: item.image,
-                        }}
-                      />
-                    </ButtonCard>
-                  ) : (
-                    <CardField key={item.id} />
-                  );
-                }}
-              />
-            </ScrollView>
-          </WrapperDeck>
-
-          <WrapperButton>
-            <ButtonSubmit title="Excluir Deck" type="red" />
-          </WrapperButton>
-        </CustomDeckSection>
-
-        <Divider />
-
-        <SearchCardSection>
-          <WrapperSearchCard>
-            <SearchField>
-              <SearchFieldInput />
-              <WrapperSearchButton>
-                <IconSearch />
-              </WrapperSearchButton>
-            </SearchField>
-          </WrapperSearchCard>
-
-          {loading ? (
-            <WrapperButton>
-              <ActivityIndicator color="#FFF" />
-            </WrapperButton>
-          ) : (
-            <WrapperCard>
-              <ScrollView horizontal scrollEnabled={false} style={{ flex: 1 }}>
+            <WrapperDeck>
+              <ScrollView horizontal scrollEnabled={false}>
                 <FlatList
                   data={data}
                   keyExtractor={(item) => item.id}
                   numColumns={3}
                   renderItem={({ item }) => {
-                    return (
-                      item.image && (
-                        <ButtonCard>
-                          <ImageCard
-                            source={{
-                              uri: item.image,
-                            }}
-                          />
-                        </ButtonCard>
-                      )
+                    return item.image ? (
+                      <ButtonCard
+                        onPress={() => navigate("CardDetails" as never)}
+                      >
+                        <ImageCard
+                          source={{
+                            uri: item.image,
+                          }}
+                        />
+                      </ButtonCard>
+                    ) : (
+                      <CardField key={item.id} />
                     );
                   }}
                 />
               </ScrollView>
-            </WrapperCard>
-          )}
-        </SearchCardSection>
-      </Content>
-    </ContainerMyDeck>
+            </WrapperDeck>
+
+            <WrapperButton>
+              <ButtonSubmit title="Excluir Deck" type="red" />
+            </WrapperButton>
+          </CustomDeckSection>
+
+          <Divider />
+
+          <SearchCardSection>
+            <WrapperSearchCard>
+              <SearchField>
+                <SearchFieldInput />
+                <WrapperSearchButton>
+                  <IconSearch />
+                </WrapperSearchButton>
+              </SearchField>
+            </WrapperSearchCard>
+
+            {loading ? (
+              <WrapperButton>
+                <ActivityIndicator color="#FFF" />
+              </WrapperButton>
+            ) : (
+              <WrapperCard>
+                <ScrollView
+                  horizontal
+                  scrollEnabled={false}
+                  style={{ flex: 1 }}
+                >
+                  <FlatList
+                    data={data}
+                    keyExtractor={(item) => item.id}
+                    numColumns={3}
+                    renderItem={({ item }) => {
+                      return (
+                        item.image && (
+                          <ButtonCard>
+                            <ImageCard
+                              source={{
+                                uri: item.image,
+                              }}
+                            />
+                          </ButtonCard>
+                        )
+                      );
+                    }}
+                  />
+                </ScrollView>
+              </WrapperCard>
+            )}
+          </SearchCardSection>
+        </Content>
+      </ContainerMyDeck>
+      <ModalColor
+        isVisible={modalVisible}
+        onClose={() => setModalVisible(false)}
+      />
+    </>
   );
 }
