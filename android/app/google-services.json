@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "251196115149",
+    "project_id": "manamaster-236e1",
+    "storage_bucket": "manamaster-236e1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:251196115149:android:456aca7cb77c4a4ed78184",
+        "android_client_info": {
+          "package_name": "com.manamaster"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "251196115149-uevisljg68grvt1uj4r6k6avqvacah4q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.manamaster",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "251196115149-a13bmm9fk9usi92pe431stju6a5oo8nh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7gelo1DGulUmLFZdcn1SbS7wF8NC_F2c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "251196115149-a13bmm9fk9usi92pe431stju6a5oo8nh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
