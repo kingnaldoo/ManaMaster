@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import {
   TransitionPresets,
   createStackNavigator,
@@ -9,10 +9,21 @@ import { useNavigation } from "@react-navigation/native";
 import { CardDetails, Home, MyDeck } from "../screens";
 import { theme } from "../global/styles/theme";
 import { Button, IconReturn, TextButton } from "./styles";
+import { useAuth } from "../hooks/useAuth";
+import { signOut } from "../services";
 
 function LogoutButton() {
+  const { setLogout } = useAuth();
+
+  const handleSignOut = useCallback(() => {
+    signOut().then(() => {
+      setLogout();
+      console.log("deslogado");
+    });
+  }, [setLogout]);
+
   return (
-    <Button>
+    <Button onPress={handleSignOut}>
       <TextButton>Sair</TextButton>
     </Button>
   );

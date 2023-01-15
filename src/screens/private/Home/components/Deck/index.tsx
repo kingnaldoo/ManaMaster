@@ -1,4 +1,5 @@
-import React from "react";
+import React, { memo } from "react";
+import { FlatList } from "react-native";
 import {
   Card,
   ContainerDeck,
@@ -8,24 +9,32 @@ import {
   Title,
   WrapperDelete,
 } from "./styles";
+import { CardProps } from "../../../../../redux/modules/card/@types/card";
 
-export function Deck() {
+type DeckProps = {
+  title: string;
+  color: string;
+  cards: CardProps[];
+};
+
+function Deck({ title, color, cards }: DeckProps) {
   return (
-    <ContainerDeck>
+    <ContainerDeck style={{ borderColor: color }}>
       <ContentTitle>
-        <Title>Armador</Title>
+        <Title style={{ color }}>{title}</Title>
         <WrapperDelete>
-          <IconDelete />
+          <IconDelete color={color} />
         </WrapperDelete>
       </ContentTitle>
-      <ContentCards>
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
+      <ContentCards style={{ backgroundColor: color }}>
+        <Card
+          source={{
+            uri: cards[0].url,
+          }}
+        />
       </ContentCards>
     </ContainerDeck>
   );
 }
+
+export default memo(Deck);
