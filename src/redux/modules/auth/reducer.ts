@@ -1,20 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { UserProps } from "./@types/user";
 
-const initialState = {
+const initialState: UserProps = {
   userId: "",
+  decks: [],
 };
 
 export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    login: (state, action) => {
-      // eslint-disable-next-line no-param-reassign
-      state.userId = action.payload;
+    login: (state, { payload }) => {
+      return { ...state, userId: payload.userId, decks: payload.decks };
     },
     logout: (state) => {
-      // eslint-disable-next-line no-param-reassign
-      state.userId = "";
+      return { ...state, userId: "", decks: [] };
     },
   },
 });

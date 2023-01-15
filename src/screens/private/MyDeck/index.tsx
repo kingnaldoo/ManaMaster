@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 
 import { ActivityIndicator, FlatList, ScrollView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -29,6 +29,7 @@ import {
   WrapperTitle,
 } from "./styles";
 import { ModalColor } from "./components/Modal/ModalColor";
+import { useAuth } from "../../../hooks/useAuth";
 
 export function MyDeck() {
   const { navigate } = useNavigation();
@@ -36,43 +37,11 @@ export function MyDeck() {
   const [title, setTitle] = React.useState("Meu deck");
   const [loading, setLoading] = React.useState(false);
   const [modalVisible, setModalVisible] = React.useState(false);
+  const { getLogin } = useAuth();
 
-  const data = [
-    {
-      id: "1",
-      name: "Mago",
-      image:
-        "https://cards.scryfall.io/small/front/d/2/d2028115-f0de-4e8b-99bc-7369352e1e07.jpg?1673306647",
-    },
-    {
-      id: "2",
-      name: "Guerreiro",
-      image:
-        "https://cards.scryfall.io/large/front/7/9/79b12c44-9537-4863-a678-c982e8714a5a.jpg?1659102058",
-    },
-    {
-      id: "3",
-      name: "Arqueiro",
-      image:
-        "https://cards.scryfall.io/large/front/8/a/8a7df52e-fa91-4c2b-a465-47274bf7e6aa.jpg?1660688195",
-    },
-    {
-      id: "4",
-      name: "Mago",
-      image:
-        "https://cards.scryfall.io/large/front/3/9/396f9198-67b6-45d8-91b4-dc853bff9623.jpg?1660722100",
-    },
-    {
-      id: "5",
-      name: "Guerreiro",
-      image: "",
-    },
-    {
-      id: "6",
-      name: "Arqueiro",
-      image: "",
-    },
-  ];
+  const handleSearchCard = useCallback(() => {
+    setLoading(true);
+  }, []);
 
   return (
     <>
@@ -100,17 +69,17 @@ export function MyDeck() {
             <WrapperDeck>
               <ScrollView horizontal scrollEnabled={false}>
                 <FlatList
-                  data={data}
-                  keyExtractor={(item) => item.id}
+                  data={getLogin.decks[0].cards}
+                  keyExtractor={(item) => item}
                   numColumns={3}
                   renderItem={({ item }) => {
-                    return item.image ? (
+                    return item.url ? (
                       <ButtonCard
                         onPress={() => navigate("CardDetails" as never)}
                       >
                         <ImageCard
                           source={{
-                            uri: item.image,
+                            uri: item.url,
                           }}
                         />
                       </ButtonCard>
@@ -150,7 +119,7 @@ export function MyDeck() {
                   scrollEnabled={false}
                   style={{ flex: 1 }}
                 >
-                  <FlatList
+                  {/* <FlatList
                     data={data}
                     keyExtractor={(item) => item.id}
                     numColumns={3}
@@ -167,7 +136,7 @@ export function MyDeck() {
                         )
                       );
                     }}
-                  />
+                  /> */}
                 </ScrollView>
               </WrapperCard>
             )}

@@ -21,7 +21,7 @@ export const ContentTitle = styled(View)`
 export const Title = styled(Text)`
   font-size: ${RFValue(20)}px;
   font-family: ${({ theme }) => theme.fonts.title700};
-  color: ${({ theme }) => theme.colors.whiteText};
+  /* color: ${({ theme }) => theme.colors.whiteText}; */
 `;
 
 export const WrapperDelete = styled(TouchableOpacity)`
@@ -34,7 +34,7 @@ export const WrapperDelete = styled(TouchableOpacity)`
 export const IconDelete = styled(Icon).attrs({
   name: "trash-2",
   size: RFValue(23),
-  color: "#fff",
+  // color: "#fff",
 })``;
 
 export const ContentCards = styled(View)`
@@ -48,9 +48,7 @@ export const ContentCards = styled(View)`
   border-bottom-right-radius: ${ms(8)}px;
 `;
 
-export const Card = styled(Image).attrs({
-  source: ImgCard,
-})`
+export const Card = styled(Image)`
   height: 100%;
   width: 13%;
   resize-mode: contain;
