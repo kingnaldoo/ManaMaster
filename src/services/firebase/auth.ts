@@ -1,9 +1,8 @@
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import Config from "react-native-config";
 
 export async function signIn() {
   GoogleSignin.configure({
-    webClientId: Config.GOOGLE_WEB_CLIENT_ID,
+    webClientId: "251196115149-a13bmm9fk9usi92pe431stju6a5oo8nh.apps.googleusercontent.com",
   });
   const value = await GoogleSignin.signIn();
   return value;
