@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import {
-  TransitionPresets,
+  // TransitionPresets,
   createStackNavigator,
 } from "@react-navigation/stack";
 import { Platform, StatusBar } from "react-native";
@@ -61,7 +61,6 @@ export function PrivateRoutes() {
           fontFamily: theme.fonts.title700,
           fontSize: ms(20),
         },
-        ...TransitionPresets.SlideFromRightIOS,
       }}
     >
       <Stack.Screen
@@ -81,6 +80,18 @@ export function PrivateRoutes() {
           name="MyDeck"
           component={MyDeck}
           options={{ title: "Meu Deck" }}
+          initialParams={{
+            id: "",
+            title: "Meu deck",
+            color: "#fff",
+            cards: [
+              {
+                name: "vazio",
+                url: "",
+                thumbnailUrl: "",
+              },
+            ],
+          }}
         />
         <Stack.Screen
           name="CardDetails"

@@ -23,7 +23,3 @@ export function updateDocument(
 ) {
   return getCollection(collectionName).doc(documentId).update(document);
 }
-
-export function deleteDocument(collectionName: string, documentId: string) {
-  return getCollection(collectionName).doc(documentId).delete();
-}

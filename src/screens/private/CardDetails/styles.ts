@@ -1,6 +1,7 @@
-import { Image, View } from "react-native";
-import { ms } from "react-native-size-matters";
 import styled from "styled-components";
+import { Image, View } from "react-native";
+
+import { ms } from "react-native-size-matters";
 
 export const ContainerCardDetails = styled(View)`
   flex: 1;
@@ -30,7 +31,6 @@ export const Content = styled(View)`
 export const ImgCard = styled(Image)`
   width: 100%;
   min-height: ${ms(600)}px;
-  elevation: 10;
   resize-mode: contain;
 `;
 

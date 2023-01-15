@@ -12,6 +12,7 @@ import { ms } from "react-native-size-matters";
 import styled from "styled-components";
 import Icon from "react-native-vector-icons/Feather";
 import { RFValue } from "react-native-responsive-fontsize";
+import { CARD_HEIGHT, CARD_WIDTH, GAP } from "../../../components/Card/styles";
 
 const { width } = Dimensions.get("window");
 
@@ -139,25 +140,10 @@ export const WrapperDeck = styled(View)`
   margin-bottom: ${ms(10)}px;
 `;
 
-const GAP = ms(15);
-const CARD_WIDTH = (width - GAP * 6) / 3;
-const CARD_HEIGHT = CARD_WIDTH + CARD_WIDTH * 0.4;
-
 export const CardField = styled(View)`
   width: ${CARD_WIDTH}px;
   height: ${CARD_HEIGHT}px;
   margin-right: ${GAP * 1.6}px;
   margin-bottom: ${GAP * 1.6}px;
   border: 1px dashed ${({ theme }) => theme.colors.whiteText};
-`;
-
-export const ButtonCard = styled(TouchableOpacity)``;
-
-export const ImageCard = styled(Image)`
-  width: ${CARD_WIDTH}px;
-  height: ${CARD_HEIGHT}px;
-  margin-right: ${GAP * 1.6}px;
-  margin-bottom: ${GAP * 1.6}px;
-  border-radius: ${ms(5)}px;
-  resize-mode: contain;
 `;

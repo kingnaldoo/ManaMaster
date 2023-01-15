@@ -2,8 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 import { CardProps } from "./@types/card";
 
 const initialState: CardProps = {
+  id: "",
   name: "",
   url: "",
+  thumbnailUrl: "",
 };
 
 export const cardSlice = createSlice({

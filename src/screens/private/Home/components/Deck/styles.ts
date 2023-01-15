@@ -1,11 +1,13 @@
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Dimensions, Image, Text, TouchableOpacity, View } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
 import styled from "styled-components";
 import Icon from "react-native-vector-icons/Feather";
 import { ms } from "react-native-size-matters";
-import ImgCard from "../../../../../assets/images/card.png";
+
+const { width } = Dimensions.get("window");
 
 export const ContainerDeck = styled(TouchableOpacity)`
+  width: ${width - ms(40)}px;
   margin-bottom: ${ms(30)}px;
   border-radius: ${ms(10)}px;
   border: 1px solid ${({ theme }) => theme.colors.whiteText};

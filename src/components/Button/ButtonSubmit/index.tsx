@@ -1,5 +1,6 @@
 import React, { useCallback } from "react";
 import { TouchableOpacityProps } from "react-native";
+
 import { ButtonSubmitText, ContainerButtonSubmit } from "./styles";
 
 interface ButtonSubmitProps extends TouchableOpacityProps {

@@ -1,21 +1,25 @@
 import React, { useCallback } from "react";
+
+import { createDocument, getDocument, signIn } from "../../../services";
+
+import { UserProps } from "../../../redux/modules/auth/@types/user";
+
+import { useAuth } from "../../../hooks/useAuth";
+
 import {
   BackgroundGradient,
   BackgroundLogin,
-  ButtonText,
   ContainerLogin,
-  Content,
-  Footer,
-  GoogleIcon,
   IconWrapper,
   OauthButton,
-  Subtitle,
   TextWrapper,
+  ButtonText,
+  GoogleIcon,
+  Subtitle,
+  Content,
+  Footer,
   Title,
 } from "./styles";
-import { createDocument, getDocument, signIn } from "../../../services";
-import { UserProps } from "../../../redux/modules/auth/@types/user";
-import { useAuth } from "../../../hooks/useAuth";
 
 export function Login() {
   const { setLogin } = useAuth();
@@ -43,7 +47,7 @@ export function Login() {
       const userId = res.user.id;
 
       if (userId) {
-        await getDocument("users", userId)
+        await getDocument("users", "oEZoBVlUUJemP32KMr6u")
           .then(async (doc) => {
             if (doc.exists) {
               const user = doc.data() as UserProps;

@@ -1,6 +1,6 @@
 export type DeckProps = {
-  id: string;
-  name: string;
+  id: number | null;
+  title: string;
   color: string;
   cards: CardProps[];
 };

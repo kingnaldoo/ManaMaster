@@ -1,47 +1,105 @@
-import React, { useCallback } from "react";
-
+import React, { useCallback, useState } from "react";
 import { ActivityIndicator, FlatList, ScrollView } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { ButtonSubmit } from "../../../components";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+
+import { ButtonSubmit, Card } from "../../../components";
+import { ModalColor } from "./components/Modal/ModalColor";
+
+import { useAuth } from "../../../hooks/useAuth";
+
+import { api, updateDocument } from "../../../services";
+
+import { CardProps } from "../../../redux/modules/card/@types/card";
+import { DeckProps } from "../../../redux/modules/deck/@types/deck";
 
 import {
-  ButtonCard,
-  CardField,
-  ContainerMyDeck,
-  Content,
-  CustomDeckSection,
-  Divider,
-  IconEdit,
-  IconSearch,
-  ImageCard,
-  InputColor,
-  InputTitle,
-  SearchCardSection,
-  SearchField,
-  SearchFieldInput,
-  Title,
-  WrapperButton,
-  WrapperCard,
-  WrapperDeck,
-  WrapperInput,
   WrapperSearchButton,
   WrapperSearchCard,
+  CustomDeckSection,
+  SearchCardSection,
+  SearchFieldInput,
+  ContainerMyDeck,
+  WrapperButton,
+  WrapperInput,
   WrapperTitle,
+  WrapperCard,
+  WrapperDeck,
+  SearchField,
+  IconSearch,
+  InputColor,
+  InputTitle,
+  IconEdit,
+  Content,
+  Divider,
+  Title,
+  // ImageCard,
 } from "./styles";
-import { ModalColor } from "./components/Modal/ModalColor";
-import { useAuth } from "../../../hooks/useAuth";
+
+type PropsParams = RouteProp<{ params: DeckProps }, "params">;
 
 export function MyDeck() {
   const { navigate } = useNavigation();
-  const [isEditableTitle, setIsEditableTitle] = React.useState(false);
-  const [title, setTitle] = React.useState("Meu deck");
-  const [loading, setLoading] = React.useState(false);
-  const [modalVisible, setModalVisible] = React.useState(false);
-  const { getLogin } = useAuth();
+  const { params } = useRoute<PropsParams>();
+  const { title, color, cards } = params;
 
-  const handleSearchCard = useCallback(() => {
+  const [isEditableTitle, setIsEditableTitle] = useState(false);
+
+  const [titleDeck, setTitleDeck] = useState(title);
+  const [colorDeck, setColorDeck] = useState(color);
+
+  const [loading, setLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const [searchInputText, setSearchInputText] = useState("");
+
+  const [data, setData] = useState<CardProps[]>([]);
+
+  const handleViewDetails = useCallback(
+    (card: CardProps) => {
+      navigate(
+        "CardDetails" as never,
+        {
+          card,
+          cardsInDeck: cards,
+        } as never
+      );
+    },
+    [cards, navigate]
+  );
+
+  const handleSearchCard = useCallback(async () => {
     setLoading(true);
-  }, []);
+
+    api
+      .get("/cards/search", {
+        params: {
+          q: searchInputText,
+        },
+      })
+      .then(async (res) => {
+        const result = res.data;
+        const cardsResult: CardProps[] = [];
+
+        await result.data.forEach((item: any) => {
+          if (item.image_uris) {
+            cardsResult.push({
+              id: "",
+              name: item.name,
+              url: item.image_uris?.png,
+              thumbnailUrl: item.image_uris?.art_crop,
+            });
+          }
+        });
+
+        setData(cardsResult);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [searchInputText]);
 
   return (
     <>
@@ -51,49 +109,51 @@ export function MyDeck() {
             <WrapperTitle>
               {isEditableTitle ? (
                 <InputTitle
-                  value={title}
-                  onChangeText={(value) => setTitle(value)}
+                  value={titleDeck}
+                  onChangeText={(value) => setTitleDeck(value)}
                   autoFocus
                   onBlur={() => setIsEditableTitle(false)}
+                  style={{
+                    color: colorDeck,
+                  }}
                 />
               ) : (
                 <WrapperInput onPress={() => setIsEditableTitle(true)}>
-                  <Title>{title}</Title>
-                  <IconEdit />
+                  <Title
+                    style={{
+                      color: colorDeck,
+                    }}
+                  >
+                    {titleDeck}
+                  </Title>
+                  <IconEdit
+                    style={{
+                      color: colorDeck,
+                    }}
+                  />
                 </WrapperInput>
               )}
 
-              <InputColor onPress={() => setModalVisible(true)} />
+              <InputColor
+                onPress={() => setModalVisible(true)}
+                style={{
+                  backgroundColor: colorDeck,
+                }}
+              />
             </WrapperTitle>
 
             <WrapperDeck>
               <ScrollView horizontal scrollEnabled={false}>
                 <FlatList
-                  data={getLogin.decks[0].cards}
-                  keyExtractor={(item) => item}
+                  data={cards}
+                  keyExtractor={(item, index) => index.toString()}
                   numColumns={3}
                   renderItem={({ item }) => {
-                    return item.url ? (
-                      <ButtonCard
-                        onPress={() => navigate("CardDetails" as never)}
-                      >
-                        <ImageCard
-                          source={{
-                            uri: item.url,
-                          }}
-                        />
-                      </ButtonCard>
-                    ) : (
-                      <CardField key={item.id} />
-                    );
+                    return <Card image={item.url} />;
                   }}
                 />
               </ScrollView>
             </WrapperDeck>
-
-            <WrapperButton>
-              <ButtonSubmit title="Excluir Deck" type="red" />
-            </WrapperButton>
           </CustomDeckSection>
 
           <Divider />
@@ -101,8 +161,12 @@ export function MyDeck() {
           <SearchCardSection>
             <WrapperSearchCard>
               <SearchField>
-                <SearchFieldInput />
-                <WrapperSearchButton>
+                <SearchFieldInput
+                  value={searchInputText}
+                  onChangeText={(value) => setSearchInputText(value)}
+                  onSubmitEditing={handleSearchCard}
+                />
+                <WrapperSearchButton onPress={handleSearchCard}>
                   <IconSearch />
                 </WrapperSearchButton>
               </SearchField>
@@ -119,24 +183,19 @@ export function MyDeck() {
                   scrollEnabled={false}
                   style={{ flex: 1 }}
                 >
-                  {/* <FlatList
+                  <FlatList
                     data={data}
-                    keyExtractor={(item) => item.id}
+                    keyExtractor={(item, index) => index.toString()}
                     numColumns={3}
-                    renderItem={({ item }) => {
+                    renderItem={({ item, index }) => {
                       return (
-                        item.image && (
-                          <ButtonCard>
-                            <ImageCard
-                              source={{
-                                uri: item.image,
-                              }}
-                            />
-                          </ButtonCard>
-                        )
+                        <Card
+                          image={item.url}
+                          onPress={() => handleViewDetails(data[index])}
+                        />
                       );
                     }}
-                  /> */}
+                  />
                 </ScrollView>
               </WrapperCard>
             )}

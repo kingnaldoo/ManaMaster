@@ -2,8 +2,9 @@ import { Image, Text, TouchableOpacity, View } from "react-native";
 import styled from "styled-components";
 
 import LinearGradient from "react-native-linear-gradient";
-import { ms } from "react-native-size-matters";
 import { RFValue } from "react-native-responsive-fontsize";
+import { ms } from "react-native-size-matters";
+
 import BackgroundImg from "../../../assets/images/login_background.png";
 import GoogleImg from "../../../assets/images/google.png";
 
