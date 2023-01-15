@@ -1,27 +1,67 @@
-import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
 import { login, logout } from "../redux/modules/auth/reducer";
+import { UserProps } from "../redux/modules/auth/@types/user";
+import { CardProps } from "../redux/modules/card/@types/card";
 
 export const useAuth = () => {
-  const [loading, setLoading] = useState(false);
-  const auth = useSelector((state: any) => state.auth);
+  const auth = useSelector((state: any) => state.auth) as UserProps;
   const dispacth = useDispatch();
 
-  const setAuth = async () => {
-    try {
-      setLoading(true);
-      const uid = "aeys";
-      dispacth(login(uid));
-      setLoading(false);
-    } catch (error) {
-      console.log("ERROR: ", error);
-      setLoading(false);
-    }
+  const setLogin = (user: UserProps) => {
+    dispacth(login(user));
   };
 
-  const sair = () => {
+  const setLogout = () => {
     dispacth(logout());
   };
 
-  return { auth, setAuth, sair, loadingAuth: loading };
+  const updateDecks = (idDeck: string) => {
+    const newData = auth.decks.filter((_, index) => String(index) !== idDeck);
+    const data = {
+      id: auth.userId,
+      decks: newData,
+    };
+    dispacth(login(data));
+  };
+
+  const addDeck = (deck: CardProps) => {
+    const newData = auth.decks.unshift(deck);
+    const data = {
+      id: auth.userId,
+      decks: newData,
+    };
+    dispacth(login(data));
+  };
+
+  const createDeck = () => {
+    const deck = {
+      id: "",
+      title: "Meu deck",
+      color: "#fff",
+      cards: [
+        {
+          name: "vazio",
+          url: "",
+          thumbnailUrl: "",
+        },
+      ],
+    };
+    const newData = [...auth.decks, deck];
+
+    const data = {
+      id: auth.userId,
+      decks: newData,
+    };
+    dispacth(login(data));
+  };
+
+  return {
+    getLogin: auth,
+    setLogin,
+    setLogout,
+    updateDecks,
+    addDeck,
+    createDeck,
+  };
 };

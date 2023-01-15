@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useCallback } from "react";
 import {
-  TransitionPresets,
+  // TransitionPresets,
   createStackNavigator,
 } from "@react-navigation/stack";
 import { Platform, StatusBar } from "react-native";
@@ -9,10 +9,21 @@ import { useNavigation } from "@react-navigation/native";
 import { CardDetails, Home, MyDeck } from "../screens";
 import { theme } from "../global/styles/theme";
 import { Button, IconReturn, TextButton } from "./styles";
+import { useAuth } from "../hooks/useAuth";
+import { signOut } from "../services";
 
 function LogoutButton() {
+  const { setLogout } = useAuth();
+
+  const handleSignOut = useCallback(() => {
+    signOut().then(() => {
+      setLogout();
+      console.log("deslogado");
+    });
+  }, [setLogout]);
+
   return (
-    <Button>
+    <Button onPress={handleSignOut}>
       <TextButton>Sair</TextButton>
     </Button>
   );
@@ -50,7 +61,6 @@ export function PrivateRoutes() {
           fontFamily: theme.fonts.title700,
           fontSize: ms(20),
         },
-        ...TransitionPresets.SlideFromRightIOS,
       }}
     >
       <Stack.Screen
@@ -70,6 +80,18 @@ export function PrivateRoutes() {
           name="MyDeck"
           component={MyDeck}
           options={{ title: "Meu Deck" }}
+          initialParams={{
+            id: "",
+            title: "Meu deck",
+            color: "#fff",
+            cards: [
+              {
+                name: "vazio",
+                url: "",
+                thumbnailUrl: "",
+              },
+            ],
+          }}
         />
         <Stack.Screen
           name="CardDetails"

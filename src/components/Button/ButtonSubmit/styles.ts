@@ -1,7 +1,7 @@
+import styled from "styled-components";
 import { Text, TouchableOpacity, StyleSheet } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
 import { ms } from "react-native-size-matters";
-import styled from "styled-components";
 
 export const ContainerButtonSubmit = styled(TouchableOpacity)`
   width: 80%;

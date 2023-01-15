@@ -6,7 +6,7 @@ const Stack = createStackNavigator();
 
 export function PublicRoutes() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName="Login">
       <Stack.Screen
         name="Login"
         component={Login}

@@ -1,22 +1,69 @@
-import React from "react";
+import React, { useCallback } from "react";
+
+import { createDocument, getDocument, signIn } from "../../../services";
+
+import { UserProps } from "../../../redux/modules/auth/@types/user";
+
+import { useAuth } from "../../../hooks/useAuth";
+
 import {
   BackgroundGradient,
   BackgroundLogin,
-  ButtonText,
   ContainerLogin,
-  Content,
-  Footer,
-  GoogleIcon,
   IconWrapper,
   OauthButton,
-  Subtitle,
   TextWrapper,
+  ButtonText,
+  GoogleIcon,
+  Subtitle,
+  Content,
+  Footer,
   Title,
 } from "./styles";
-import { useAuth } from "../../../hooks/useAuth";
 
 export function Login() {
-  const { setUser } = useAuth();
+  const { setLogin } = useAuth();
+
+  const handleSignUp = useCallback(
+    async (userId: string) => {
+      const user = {
+        userId,
+        decks: [],
+      };
+
+      await createDocument("users", userId, user)
+        .then(() => {
+          setLogin(user);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    [setLogin]
+  );
+
+  const handleLogin = useCallback(async () => {
+    await signIn().then(async (res) => {
+      const userId = res.user.id;
+
+      if (userId) {
+        await getDocument("users", "oEZoBVlUUJemP32KMr6u")
+          .then(async (doc) => {
+            if (doc.exists) {
+              const user = doc.data() as UserProps;
+              setLogin(user);
+            } else {
+              await handleSignUp(userId).catch((err) => {
+                console.log(err);
+              });
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    });
+  }, [handleSignUp, setLogin]);
 
   return (
     <ContainerLogin>
@@ -31,7 +78,7 @@ export function Login() {
         </Subtitle>
 
         <Footer>
-          <OauthButton onPress={() => setUser("fruberv")}>
+          <OauthButton onPress={handleLogin}>
             <IconWrapper>
               <GoogleIcon />
             </IconWrapper>

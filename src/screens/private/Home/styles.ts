@@ -1,6 +1,7 @@
 import { ScrollView, TouchableOpacity, View } from "react-native";
-import { ms } from "react-native-size-matters";
 import styled from "styled-components";
+
+import { ms } from "react-native-size-matters";
 import Icon from "react-native-vector-icons/Feather";
 
 export const ContainerHome = styled(View)`

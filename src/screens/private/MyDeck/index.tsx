@@ -1,78 +1,105 @@
-import React from "react";
-
+import React, { useCallback, useState } from "react";
 import { ActivityIndicator, FlatList, ScrollView } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { ButtonSubmit } from "../../../components";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+
+import { ButtonSubmit, Card } from "../../../components";
+import { ModalColor } from "./components/Modal/ModalColor";
+
+import { useAuth } from "../../../hooks/useAuth";
+
+import { api, updateDocument } from "../../../services";
+
+import { CardProps } from "../../../redux/modules/card/@types/card";
+import { DeckProps } from "../../../redux/modules/deck/@types/deck";
 
 import {
-  ButtonCard,
-  CardField,
-  ContainerMyDeck,
-  Content,
-  CustomDeckSection,
-  Divider,
-  IconEdit,
-  IconSearch,
-  ImageCard,
-  InputColor,
-  InputTitle,
-  SearchCardSection,
-  SearchField,
-  SearchFieldInput,
-  Title,
-  WrapperButton,
-  WrapperCard,
-  WrapperDeck,
-  WrapperInput,
   WrapperSearchButton,
   WrapperSearchCard,
+  CustomDeckSection,
+  SearchCardSection,
+  SearchFieldInput,
+  ContainerMyDeck,
+  WrapperButton,
+  WrapperInput,
   WrapperTitle,
+  WrapperCard,
+  WrapperDeck,
+  SearchField,
+  IconSearch,
+  InputColor,
+  InputTitle,
+  IconEdit,
+  Content,
+  Divider,
+  Title,
+  // ImageCard,
 } from "./styles";
-import { ModalColor } from "./components/Modal/ModalColor";
+
+type PropsParams = RouteProp<{ params: DeckProps }, "params">;
 
 export function MyDeck() {
   const { navigate } = useNavigation();
-  const [isEditableTitle, setIsEditableTitle] = React.useState(false);
-  const [title, setTitle] = React.useState("Meu deck");
-  const [loading, setLoading] = React.useState(false);
-  const [modalVisible, setModalVisible] = React.useState(false);
+  const { params } = useRoute<PropsParams>();
+  const { title, color, cards } = params;
 
-  const data = [
-    {
-      id: "1",
-      name: "Mago",
-      image:
-        "https://cards.scryfall.io/small/front/d/2/d2028115-f0de-4e8b-99bc-7369352e1e07.jpg?1673306647",
+  const [isEditableTitle, setIsEditableTitle] = useState(false);
+
+  const [titleDeck, setTitleDeck] = useState(title);
+  const [colorDeck, setColorDeck] = useState(color);
+
+  const [loading, setLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const [searchInputText, setSearchInputText] = useState("");
+
+  const [data, setData] = useState<CardProps[]>([]);
+
+  const handleViewDetails = useCallback(
+    (card: CardProps) => {
+      navigate(
+        "CardDetails" as never,
+        {
+          card,
+          cardsInDeck: cards,
+        } as never
+      );
     },
-    {
-      id: "2",
-      name: "Guerreiro",
-      image:
-        "https://cards.scryfall.io/large/front/7/9/79b12c44-9537-4863-a678-c982e8714a5a.jpg?1659102058",
-    },
-    {
-      id: "3",
-      name: "Arqueiro",
-      image:
-        "https://cards.scryfall.io/large/front/8/a/8a7df52e-fa91-4c2b-a465-47274bf7e6aa.jpg?1660688195",
-    },
-    {
-      id: "4",
-      name: "Mago",
-      image:
-        "https://cards.scryfall.io/large/front/3/9/396f9198-67b6-45d8-91b4-dc853bff9623.jpg?1660722100",
-    },
-    {
-      id: "5",
-      name: "Guerreiro",
-      image: "",
-    },
-    {
-      id: "6",
-      name: "Arqueiro",
-      image: "",
-    },
-  ];
+    [cards, navigate]
+  );
+
+  const handleSearchCard = useCallback(async () => {
+    setLoading(true);
+
+    api
+      .get("/cards/search", {
+        params: {
+          q: searchInputText,
+        },
+      })
+      .then(async (res) => {
+        const result = res.data;
+        const cardsResult: CardProps[] = [];
+
+        await result.data.forEach((item: any) => {
+          if (item.image_uris) {
+            cardsResult.push({
+              id: "",
+              name: item.name,
+              url: item.image_uris?.png,
+              thumbnailUrl: item.image_uris?.art_crop,
+            });
+          }
+        });
+
+        setData(cardsResult);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [searchInputText]);
 
   return (
     <>
@@ -82,49 +109,51 @@ export function MyDeck() {
             <WrapperTitle>
               {isEditableTitle ? (
                 <InputTitle
-                  value={title}
-                  onChangeText={(value) => setTitle(value)}
+                  value={titleDeck}
+                  onChangeText={(value) => setTitleDeck(value)}
                   autoFocus
                   onBlur={() => setIsEditableTitle(false)}
+                  style={{
+                    color: colorDeck,
+                  }}
                 />
               ) : (
                 <WrapperInput onPress={() => setIsEditableTitle(true)}>
-                  <Title>{title}</Title>
-                  <IconEdit />
+                  <Title
+                    style={{
+                      color: colorDeck,
+                    }}
+                  >
+                    {titleDeck}
+                  </Title>
+                  <IconEdit
+                    style={{
+                      color: colorDeck,
+                    }}
+                  />
                 </WrapperInput>
               )}
 
-              <InputColor onPress={() => setModalVisible(true)} />
+              <InputColor
+                onPress={() => setModalVisible(true)}
+                style={{
+                  backgroundColor: colorDeck,
+                }}
+              />
             </WrapperTitle>
 
             <WrapperDeck>
               <ScrollView horizontal scrollEnabled={false}>
                 <FlatList
-                  data={data}
-                  keyExtractor={(item) => item.id}
+                  data={cards}
+                  keyExtractor={(item, index) => index.toString()}
                   numColumns={3}
                   renderItem={({ item }) => {
-                    return item.image ? (
-                      <ButtonCard
-                        onPress={() => navigate("CardDetails" as never)}
-                      >
-                        <ImageCard
-                          source={{
-                            uri: item.image,
-                          }}
-                        />
-                      </ButtonCard>
-                    ) : (
-                      <CardField key={item.id} />
-                    );
+                    return <Card image={item.url} />;
                   }}
                 />
               </ScrollView>
             </WrapperDeck>
-
-            <WrapperButton>
-              <ButtonSubmit title="Excluir Deck" type="red" />
-            </WrapperButton>
           </CustomDeckSection>
 
           <Divider />
@@ -132,8 +161,12 @@ export function MyDeck() {
           <SearchCardSection>
             <WrapperSearchCard>
               <SearchField>
-                <SearchFieldInput />
-                <WrapperSearchButton>
+                <SearchFieldInput
+                  value={searchInputText}
+                  onChangeText={(value) => setSearchInputText(value)}
+                  onSubmitEditing={handleSearchCard}
+                />
+                <WrapperSearchButton onPress={handleSearchCard}>
                   <IconSearch />
                 </WrapperSearchButton>
               </SearchField>
@@ -152,19 +185,14 @@ export function MyDeck() {
                 >
                   <FlatList
                     data={data}
-                    keyExtractor={(item) => item.id}
+                    keyExtractor={(item, index) => index.toString()}
                     numColumns={3}
-                    renderItem={({ item }) => {
+                    renderItem={({ item, index }) => {
                       return (
-                        item.image && (
-                          <ButtonCard>
-                            <ImageCard
-                              source={{
-                                uri: item.image,
-                              }}
-                            />
-                          </ButtonCard>
-                        )
+                        <Card
+                          image={item.url}
+                          onPress={() => handleViewDetails(data[index])}
+                        />
                       );
                     }}
                   />
