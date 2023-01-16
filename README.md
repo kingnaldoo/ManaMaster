@@ -3,7 +3,7 @@
   <h3>ManaMaster</h3>
 </div>
 
-<p align="center">🚚️ Garbage collection app developed for the Environment Department of Mombaça</p>
+<p align="center">🧙🏻‍♂️️ ManaMaster is an app with the purpose of building Magic decks</p>
 <ul align="center">
     <img src="https://img.shields.io/static/v1?label=Version&message=1.0.0&labelColor=%2306121f&style=flat-square&color=%231BB471">
     <img src="https://img.shields.io/static/v1?label=License&message=MIT&labelColor=%2306121f&style=flat-square&color=%231BB471">
